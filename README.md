@@ -9,8 +9,9 @@ Geolocalização,
 Tokenização,
 
 Node.js com:
-Typescript (tsx, tsup)
-Fastify
+Typescript (tsx, tsup);
+Fastify;
+Prisma ORM;
 
 
 
