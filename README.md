@@ -2,16 +2,20 @@
 
 É uma aplicação baseada no GymPass.
 
-# Tecnologias utilizadas
+# Tecnologias & conceitos utilizados
 
 SOLID,
 Geolocalização,
 Tokenização,
+Design Patterns,
+Casos de uso,
+Controle de acesso (RBAC),
 
 Node.js com:
 Typescript (tsx, tsup);
 Fastify;
 Prisma ORM;
+Docker;
 
 
 
