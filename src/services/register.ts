@@ -23,7 +23,7 @@ export class RegisterService {
     await this.usersRepository.create({
       name,
       email,
-      password_hash
+      password_hash,
     })
   }
 }
