@@ -1,24 +1,12 @@
 import { it, describe, expect } from 'vitest'
 import { RegisterService } from './register'
 import { compare } from 'bcryptjs'
+import { InMemoryUsersRepository } from '@/repositories/in-memory/in-memory-users-repository'
 
 describe('Register service', () => {
   it('should hash user password upon registration', async () => {
-    const registerService = new RegisterService({
-      async findByEmail(email) {
-        return null
-      },
-
-      async create(data) {
-        return {
-          id: 'test user',
-          name: data.name,
-          email: data.email,
-          password_hash: data.password_hash,
-          created_at: new Date(),
-        }
-      },
-    })
+    const UsersRepository = new InMemoryUsersRepository()
+    const registerService = new RegisterService(UsersRepository)
 
     const { user } = await registerService.execute({
       name: 'João predo',
