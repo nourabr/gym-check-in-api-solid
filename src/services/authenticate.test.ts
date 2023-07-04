@@ -5,7 +5,7 @@ import { hash } from 'bcryptjs'
 import { InvalidCredentials } from './errors/invalid-credentials'
 
 describe('Authenticate Service', () => {
-  it('should be able to authenticate with valid credentials', async () => {
+  it('should be able to authenticate', async () => {
     const usersRepository = new InMemoryUsersRepository()
     const authenticateService = new AuthenticateService(usersRepository)
 
