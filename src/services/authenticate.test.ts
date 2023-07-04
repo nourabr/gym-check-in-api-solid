@@ -1,21 +1,26 @@
 import { InMemoryUsersRepository } from '@/repositories/in-memory/in-memory-users-repository'
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, beforeEach } from 'vitest'
 import { AuthenticateService } from './authenticate'
 import { hash } from 'bcryptjs'
 import { InvalidCredentials } from './errors/invalid-credentials'
 
 describe('Authenticate Service', () => {
-  it('should be able to authenticate', async () => {
-    const usersRepository = new InMemoryUsersRepository()
-    const authenticateService = new AuthenticateService(usersRepository)
+  let usersRepository: InMemoryUsersRepository
+  let sut: AuthenticateService
 
+  beforeEach(() => {
+    usersRepository = new InMemoryUsersRepository()
+    sut = new AuthenticateService(usersRepository)
+  })
+
+  it('should be able to authenticate', async () => {
     await usersRepository.create({
       name: 'Noura',
       email: 'noura@noura.com',
       password_hash: await hash('123456', 6),
     })
 
-    const { user } = await authenticateService.execute({
+    const { user } = await sut.execute({
       email: 'noura@noura.com',
       password: '123456',
     })
@@ -24,11 +29,8 @@ describe('Authenticate Service', () => {
   })
 
   it('should not be able to authenticate with invalid email', async () => {
-    const usersRepository = new InMemoryUsersRepository()
-    const authenticateService = new AuthenticateService(usersRepository)
-
     expect(async () => {
-      await authenticateService.execute({
+      await sut.execute({
         email: 'nouraaaaaaa@noura.com',
         password: '123456',
       })
@@ -36,9 +38,6 @@ describe('Authenticate Service', () => {
   })
 
   it('should not be able to authenticate with invalid password', async () => {
-    const usersRepository = new InMemoryUsersRepository()
-    const authenticateService = new AuthenticateService(usersRepository)
-
     await usersRepository.create({
       name: 'Noura',
       email: 'noura@noura.com',
@@ -46,7 +45,7 @@ describe('Authenticate Service', () => {
     })
 
     expect(async () => {
-      await authenticateService.execute({
+      await sut.execute({
         email: 'noura@noura.com',
         password: 'fd13iud',
       })

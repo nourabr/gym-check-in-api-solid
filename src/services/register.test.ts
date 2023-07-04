@@ -1,15 +1,20 @@
-import { it, describe, expect } from 'vitest'
+import { it, describe, expect, beforeEach } from 'vitest'
 import { RegisterService } from './register'
 import { compare } from 'bcryptjs'
 import { InMemoryUsersRepository } from '@/repositories/in-memory/in-memory-users-repository'
 import { UserAlreadyExistsError } from './errors/user-already-exists'
 
 describe('Register service', () => {
-  it('should be able to register', async () => {
-    const UsersRepository = new InMemoryUsersRepository()
-    const registerService = new RegisterService(UsersRepository)
+  let usersRepository: InMemoryUsersRepository
+  let sut: RegisterService
 
-    const { user } = await registerService.execute({
+  beforeEach(() => {
+    usersRepository = new InMemoryUsersRepository()
+    sut = new RegisterService(usersRepository)
+  })
+
+  it('should be able to register', async () => {
+    const { user } = await sut.execute({
       name: 'João predo',
       email: 'joao@predo.com',
       password: '123456',
@@ -19,10 +24,7 @@ describe('Register service', () => {
   })
 
   it('should hash user password upon registration', async () => {
-    const UsersRepository = new InMemoryUsersRepository()
-    const registerService = new RegisterService(UsersRepository)
-
-    const { user } = await registerService.execute({
+    const { user } = await sut.execute({
       name: 'João predo',
       email: 'joao@predo.com',
       password: '123456',
@@ -34,17 +36,14 @@ describe('Register service', () => {
   })
 
   it('should not be able to register with the same email twice', async () => {
-    const UsersRepository = new InMemoryUsersRepository()
-    const registerService = new RegisterService(UsersRepository)
-
-    await registerService.execute({
+    await sut.execute({
       name: 'João predo',
       email: 'joao@predo.com',
       password: '123456',
     })
 
     expect(async () => {
-      await registerService.execute({
+      await sut.execute({
         name: 'João predo',
         email: 'joao@predo.com',
         password: '123456',
